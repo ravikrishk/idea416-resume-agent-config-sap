@@ -28,7 +28,7 @@ spec:
         maxReplicas: 1
         containers:
         - name: kserve-container
-          image: "docker.io/kravikrishna/idea-416-resume-agent:v2"
+          image: "docker.io/kravikrishna/idea-416-resume-agent:v4"
           ports:
             - containerPort: 8080
               protocol: TCP
