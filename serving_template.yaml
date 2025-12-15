@@ -3,7 +3,7 @@ kind: ServingTemplate
 metadata:
   name: resume-analysis-pipeline
   annotations:
-    scenarios.ai.sap.com/description: "Analyzes resumes using GenAI Hub"
+    scenarios.ai.sap.com/description: "Analyzes resumes using GenAI Hub and Job"
     scenarios.ai.sap.com/name: "resume-analysis-pipeline"
     executables.ai.sap.com/description: "Analyzes resumes using GenAI Hub"
     executables.ai.sap.com/name: "resume-analysis-pipeline"
