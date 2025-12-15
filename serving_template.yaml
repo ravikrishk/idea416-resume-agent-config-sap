@@ -1,0 +1,50 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ServingTemplate
+metadata:
+  name: resume-analysis-pipeline
+  annotations:
+    executables.ai.sap.com/description: "Analyzes resumes using GenAI Hub"
+    executables.ai.sap.com/name: "resume-analysis-pipeline"
+  labels:
+    scenarios.ai.sap.com/id: "resume-detection"
+    ai.sap.com/version: "1.0.0"
+spec:
+  inputs:
+    parameters: []
+  template:
+    apiVersion: "serving.kserve.io/v1beta1"
+    metadata:
+      annotations: |
+        autoscaling.knative.dev/minScale: "1"
+      labels: |
+        ai.sap.com/resourcePlan: starter
+    spec: |
+      predictor:
+        minReplicas: 1
+        containers:
+        - name: kserve-container
+          image: "docker.io/kravikrishna/idea-416-resume-agent:v1"
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          env:
+          - name: AICORE_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: resume-service-key
+                key: clientid
+          - name: AICORE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: resume-service-key
+                key: clientsecret
+          - name: AICORE_AUTH_URL
+            valueFrom:
+              secretKeyRef:
+                name: resume-service-key
+                key: url
+          - name: AICORE_BASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: resume-service-key
+                key: serviceurls
