@@ -3,6 +3,8 @@ kind: ServingTemplate
 metadata:
   name: resume-analysis-pipeline
   annotations:
+    scenarios.ai.sap.com/description: "Analyzes resumes using GenAI Hub"
+    scenarios.ai.sap.com/name: "resume-analysis-pipeline"
     executables.ai.sap.com/description: "Analyzes resumes using GenAI Hub"
     executables.ai.sap.com/name: "resume-analysis-pipeline"
   labels:
@@ -15,36 +17,39 @@ spec:
     apiVersion: "serving.kserve.io/v1beta1"
     metadata:
       annotations: |
-        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/metric: concurrency
+        autoscaling.knative.dev/target: 1
+        autoscaling.knative.dev/targetBurstCapacity: 0
       labels: |
         ai.sap.com/resourcePlan: starter
     spec: |
       predictor:
         minReplicas: 1
+        maxReplicas: 1
         containers:
         - name: kserve-container
           image: "docker.io/kravikrishna/idea-416-resume-agent:v1"
           ports:
-          - containerPort: 8080
-            protocol: TCP
+            - containerPort: 8080
+              protocol: TCP
           env:
-          - name: AICORE_CLIENT_ID
-            valueFrom:
-              secretKeyRef:
-                name: resume-service-key
-                key: clientid
-          - name: AICORE_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: resume-service-key
-                key: clientsecret
-          - name: AICORE_AUTH_URL
-            valueFrom:
-              secretKeyRef:
-                name: resume-service-key
-                key: url
-          - name: AICORE_BASE_URL
-            valueFrom:
-              secretKeyRef:
-                name: resume-service-key
-                key: serviceurls
+            - name: AICORE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: resume-service-key
+                  key: clientid
+            - name: AICORE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: resume-service-key
+                  key: clientsecret
+            - name: AICORE_AUTH_URL
+              valueFrom:
+                secretKeyRef:
+                  name: resume-service-key
+                  key: url
+            - name: AICORE_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: resume-service-key
+                  key: serviceurls
